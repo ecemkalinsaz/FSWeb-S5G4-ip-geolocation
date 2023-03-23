@@ -1,4 +1,4 @@
-//axios import buraya gelecek
+import axios from "axios"; //axios import
 
 var benimIP;
 
@@ -7,18 +7,18 @@ var benimIP;
 // licensed to Ergineer 2022
 require("babel-core/register");
 require("babel-polyfill");
-async function ipAdresimiAl(){
-	await axios({
-		method: 'get',
-		url: 'https://apis.ergineer.com/ipadresim',
-	})
-	.then(function (response) {
-		return response.data
-	})
-	.then(function (a) {
-		benimIP=a
-	});
-}				
+async function ipAdresimiAl() {
+  await axios({
+    method: "get",
+    url: "https://apis.ergineer.com/ipadresim",
+  })
+    .then(function (response) {
+      return response.data;
+    })
+    .then(function (a) {
+      benimIP = a;
+    });
+}
 // ------------ değiştirmeyin --------------
 
 
@@ -67,6 +67,66 @@ async function ipAdresimiAl(){
 	Örnek dinamik URL kullanımı: var url = "https://apis.ergineer.com/ipgeoapi/"+benimIP; 
 */
 
-
-
 //kodlar buraya gelecek
+
+ipAdresimiAl().then(() => {
+	const url = `https://apis.ergineer.com/ipgeoapi/${benimIP}`;
+
+	axios
+	.get(url)
+	.then((response) => {
+		console.log(response.data);
+		const card = data(response.data);
+
+		const cardsContainer = document.querySelector('.cards');
+
+		cardsContainer.appendChild(card);
+	})
+	.catch((error) => {
+		console.log(error);
+	});
+
+	function data(cardData) {
+	const ulkeCard = document.createElement("div");
+	ulkeCard.classList.add("card");
+
+	const ulkeBayragi = document.createElement("img");
+	ulkeBayragi.src = cardData.ülkebayrağı;
+	ulkeCard.appendChild(ulkeBayragi);
+
+	const ulkeData = document.createElement("div");
+	ulkeData.classList.add("card-info");
+	ulkeCard.appendChild(ulkeData);
+
+	const ulkeIp = document.createElement("h3");
+	ulkeIp.textContent = cardData.sorgu;
+	ulkeData.appendChild(ulkeIp);
+
+	const ulkeBilgi = document.createElement("p");
+	ulkeBilgi.classList.add("ulke");
+	ulkeBilgi.textContent = cardData.ülkeKodu;
+	ulkeData.appendChild(ulkeBilgi);
+
+	const ulkeEnlem = document.createElement("p");
+	ulkeEnlem.textContent = `Enlem: ${cardData.enlem} Boylam: ${cardData.boylam}`;
+	ulkeData.appendChild(ulkeEnlem);
+
+	const ulkedekiSehir = document.createElement("p");
+	ulkedekiSehir.textContent = `Şehir: ${cardData.şehir}`;
+	ulkeData.appendChild(ulkedekiSehir);
+
+	const ulkeSaatDilimi = document.createElement("p");
+	ulkeSaatDilimi.textContent = cardData.saatdilimi;
+	ulkeData.appendChild(ulkeSaatDilimi);
+
+	const ulkeParaBirimi = document.createElement("p");
+	ulkeParaBirimi.textContent = cardData.parabirimi;
+	ulkeData.appendChild(ulkeParaBirimi);
+
+	const ulkeIsp = document.createElement("p");
+	ulkeIsp.textContent = cardData.isp;
+	ulkeData.appendChild(ulkeIp);
+
+	return ulkeCard;
+	}
+})
